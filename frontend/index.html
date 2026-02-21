@@ -36,7 +36,7 @@
 const languages = ["csharp", "python", "javascript", "go", "java", "node"];
 
 function loadVotes() {
-  fetch("http://api:8080/votes")
+  fetch("http://localhost:30008/votes")
     .then(res => res.json())
     .then(data => {
       const container = document.getElementById("container");
@@ -60,7 +60,7 @@ function loadVotes() {
 }
 
 function vote(lang) {
-  fetch(`http://api:8080/vote/${lang}`, {
+  fetch(`http://localhost:30008/vote/${lang}`, {
     method: "POST"
   })
   .then(() => loadVotes())
