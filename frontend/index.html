@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cloud Voting App</title>
+  <style>
+    body { font-family: Arial; }
+    .card {
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin: 10px;
+      width: 200px;
+      display: inline-block;
+      text-align: center;
+    }
+    button {
+      padding: 5px 10px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Cloud Voting App</h1>
+
+<div id="container"></div>
+
+<script>
+const languages = ["csharp", "python", "javascript", "go", "java", "node"];
+
+function loadVotes() {
+  fetch("http://localhost:8080/votes")
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("container");
+      container.innerHTML = "";
+
+      languages.forEach(lang => {
+        container.innerHTML += `
+          <div class="card">
+            <h3>${lang.toUpperCase()}</h3>
+            <button onclick="vote('${lang}')">+1</button>
+            <p>Votes: ${data[lang]}</p>
+          </div>
+        `;
+      });
+    });
+}
+
+function vote(lang) {
+  fetch(`http://localhost:8080/vote/${lang}`, {
+    method: "POST"
+  })
+  .then(() => loadVotes());
+}
+
+loadVotes();
+</script>
+
+</body>
+</html>
