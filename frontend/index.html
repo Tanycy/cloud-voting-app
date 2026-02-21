@@ -3,18 +3,26 @@
 <head>
   <title>Cloud Voting App</title>
   <style>
-    body { font-family: Arial; }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
     .card {
       border: 1px solid #ccc;
       padding: 20px;
-      margin: 10px;
+      margin: 15px;
       width: 200px;
       display: inline-block;
       text-align: center;
+      border-radius: 8px;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
     }
+
     button {
-      padding: 5px 10px;
+      padding: 6px 12px;
       margin-bottom: 10px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -28,29 +36,37 @@
 const languages = ["csharp", "python", "javascript", "go", "java", "node"];
 
 function loadVotes() {
-  fetch("http://localhost:8080/votes")
+  fetch("http://api:8080/votes")
     .then(res => res.json())
     .then(data => {
       const container = document.getElementById("container");
       container.innerHTML = "";
 
       languages.forEach(lang => {
+        const voteCount = data[lang] || 0;
+
         container.innerHTML += `
           <div class="card">
             <h3>${lang.toUpperCase()}</h3>
             <button onclick="vote('${lang}')">+1</button>
-            <p>Votes: ${data[lang]}</p>
+            <p>Votes: ${voteCount}</p>
           </div>
         `;
       });
+    })
+    .catch(err => {
+      console.error("Error loading votes:", err);
     });
 }
 
 function vote(lang) {
-  fetch(`http://localhost:8080/vote/${lang}`, {
+  fetch(`http://api:8080/vote/${lang}`, {
     method: "POST"
   })
-  .then(() => loadVotes());
+  .then(() => loadVotes())
+  .catch(err => {
+    console.error("Error voting:", err);
+  });
 }
 
 loadVotes();

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: cloud-voting
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+      - name: api
+        image: tanycy/cloud-voting-api:1.0
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MONGO_URL
+          value: mongodb://mongo:27017
